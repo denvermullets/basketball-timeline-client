@@ -7,6 +7,13 @@ type PlayerCardProps = {
 };
 
 const PlayerCard: React.FC<PlayerCardProps> = ({ headshot, name, color }) => {
+  // splitting first / last name to be on 2 lines
+  const firstSpaceIndex = name.indexOf(" ");
+  const firstName =
+    firstSpaceIndex !== -1 ? name.slice(0, firstSpaceIndex) : name;
+  const lastName =
+    firstSpaceIndex !== -1 ? name.slice(firstSpaceIndex + 1) : "";
+
   return (
     <Flex
       direction="column"
@@ -25,13 +32,13 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ headshot, name, color }) => {
         roundedBottom="inherit"
       />
       <Avatar size="3xl" src={headshot} borderRadius="5px" />
-      <VStack spacing="1" flex="1">
-        <HStack>
-          <Heading size="md" as="h2" marginTop="4px">
-            {name}
-          </Heading>
-        </HStack>
-      </VStack>
+      <Box textAlign="left">
+        <Heading size="md" as="h2" marginTop="4px" textAlign="center">
+          {firstName}
+          <br />
+          {lastName}
+        </Heading>
+      </Box>
     </Flex>
   );
 };

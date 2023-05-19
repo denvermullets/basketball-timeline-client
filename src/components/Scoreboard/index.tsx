@@ -1,4 +1,5 @@
-import { Box, Flex, Text, Image } from "@chakra-ui/react";
+import { Badge, Box, Flex, Text } from "@chakra-ui/react";
+
 import React from "react";
 
 type ScoreboardProps = {
@@ -9,6 +10,7 @@ type ScoreboardProps = {
   opponentName: string;
   win: number;
   loss: number;
+  gameWon: boolean;
 };
 
 const Scoreboard: React.FC<ScoreboardProps> = ({
@@ -19,6 +21,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
   opponentName,
   win,
   loss,
+  gameWon,
 }) => {
   return (
     <Box
@@ -59,6 +62,9 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
           <Text fontSize={{ base: "lg", sm: "xl" }} fontWeight="bold">
             {homeScore}
           </Text>
+          <Badge colorScheme={gameWon ? "green" : "red"}>
+            {gameWon ? "w" : "l"}
+          </Badge>
         </Box>
       </Flex>
 

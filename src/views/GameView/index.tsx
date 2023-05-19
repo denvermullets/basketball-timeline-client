@@ -1,18 +1,10 @@
-import {
-  Box,
-  Center,
-  Flex,
-  Grid,
-  Heading,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
-import { AnimatePresence, motion } from "framer-motion";
+import { Box, Container, Flex } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import PlayerCard from "../../components/PlayerCard";
 import axios from "axios";
 import Scoreboard from "../../components/Scoreboard";
 import { useLocation } from "react-router-dom";
+import PlayerGrid from "../../components/PlayerGrid";
+import PlayBar from "../../components/PlayBar";
 
 export interface Game {
   id: number;
@@ -54,6 +46,7 @@ const GameView: React.FC = () => {
   const year = queryParams.get("year");
   const [games, setGames] = useState<Game[]>([]);
   const [currentGame, setCurrentGame] = useState<number>(0);
+  const [pause, setPause] = useState<boolean>(false);
 
   useEffect(() => {
     const loadInfo = async () => {
@@ -77,7 +70,7 @@ const GameView: React.FC = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (currentGame !== games.length - 1) {
+      if (currentGame !== games.length - 1 && !pause) {
         console.log(currentGame, games.length);
         setCurrentGame((prevGame) => prevGame + 1);
       } else {
@@ -88,71 +81,30 @@ const GameView: React.FC = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [currentGame, games]);
+  }, [currentGame, games, pause]);
 
   return (
-    <VStack spacing={4}>
-      <Flex
-        direction={{ base: "column", md: "row" }}
-        justifyContent="space-between"
-        alignItems="stretch"
-      >
-        <AnimatePresence mode="popLayout">
-          {games?.length > 0 && (
-            <motion.div
-              key={games[currentGame].leader.url}
-              initial={{ opacity: 0, y: -50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -50 }}
-              transition={{
-                duration: 0.5,
-              }}
-              style={{ width: 200, height: 300 }}
-              variants={{
-                exit: {
-                  opacity: 0,
-                  y: -50,
-                  transition: { duration: 0.05 },
-                },
-              }}
-            >
-              <PlayerCard
-                headshot={games[currentGame].leader.headshot_url}
-                name={games[currentGame].leader.name}
-                color={games[currentGame].team.abbreviation}
-              />
-            </motion.div>
-          )}
-          {games?.length > 0 &&
-            games[currentGame].players.map((player: Player, index) => (
-              <motion.div
-                key={player.reference_url}
-                initial={{ opacity: 0, y: -50 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -50 }}
-                transition={{
-                  duration: 0.5,
-                  delay: currentGame === 0 ? (index + 1) * 0.2 : 0,
-                }}
-                style={{ width: 200, height: 300 }}
-                variants={{
-                  exit: {
-                    opacity: 0,
-                    y: -50,
-                    transition: { duration: 0.05 },
-                  },
-                }}
-              >
-                <PlayerCard
-                  headshot={player.headshot_url}
-                  name={player.name}
-                  color={games[currentGame].team.abbreviation}
-                />
-              </motion.div>
-            ))}
-        </AnimatePresence>
-        <Box>
-          {games?.length > 0 && (
+    <>
+      <Container maxW="700px">
+        <Flex
+          direction={{ base: "column", md: "row" }}
+          flexWrap="wrap"
+          alignItems="center"
+          justifyContent="center"
+          gap="4"
+        >
+          <PlayerGrid games={games} currentGame={currentGame} />
+        </Flex>
+      </Container>
+      <Box>
+        {games?.length > 0 && (
+          <>
+            <PlayBar
+              pause={pause}
+              setPause={setPause}
+              currentYear={Number(year)}
+            />
+
             <Scoreboard
               date={String(games[currentGame].date)}
               homeScore={games[currentGame].team_points}
@@ -161,11 +113,12 @@ const GameView: React.FC = () => {
               opponentName={games[currentGame].opponent}
               win={games[currentGame].win}
               loss={games[currentGame].loss}
+              gameWon={games[currentGame].game_won}
             />
-          )}
-        </Box>
-      </Flex>
-    </VStack>
+          </>
+        )}
+      </Box>
+    </>
   );
 };
 
