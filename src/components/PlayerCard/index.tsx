@@ -1,4 +1,4 @@
-import { Avatar, Box, Flex, HStack, Heading, VStack } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Heading } from "@chakra-ui/react";
 
 type PlayerCardProps = {
   headshot: string;
@@ -13,6 +13,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ headshot, name, color }) => {
     firstSpaceIndex !== -1 ? name.slice(0, firstSpaceIndex) : name;
   const lastName =
     firstSpaceIndex !== -1 ? name.slice(firstSpaceIndex + 1) : "";
+  const longLastName = lastName.length > 12;
 
   return (
     <Flex
@@ -22,6 +23,8 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ headshot, name, color }) => {
       padding="8"
       position="relative"
       shadow={{ md: "base" }}
+      borderWidth={1}
+      borderColor={`${color}.50`}
     >
       <Box
         position="absolute"
@@ -31,9 +34,20 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ headshot, name, color }) => {
         bgGradient={`linear(40deg, ${color}.50, ${color}.100)`}
         roundedBottom="inherit"
       />
-      <Avatar size="3xl" src={headshot} borderRadius="5px" />
+      <Avatar
+        size="3xl"
+        src={headshot}
+        borderRadius="5px"
+        marginBottom={headshot ? 0 : "45px"}
+      />
       <Box textAlign="left">
-        <Heading size="md" as="h2" marginTop="4px" textAlign="center">
+        <Heading
+          size={longLastName ? "sm" : "md"}
+          as="h2"
+          marginTop="4px"
+          textAlign="center"
+          lineHeight="6"
+        >
           {firstName}
           <br />
           {lastName}

@@ -2,13 +2,25 @@ import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import { Game, Player } from "../../views/GameView";
 import PlayerCard from "../PlayerCard";
+import { retroYearEnds } from "./helpers";
 
 type PlayerGridProps = {
   games: Game[];
   currentGame: number;
+  team: string;
 };
 
-const PlayerGrid: React.FC<PlayerGridProps> = ({ games, currentGame }) => {
+const PlayerGrid: React.FC<PlayerGridProps> = ({
+  games,
+  currentGame,
+  team,
+}) => {
+  // some teams have retro colors available
+  const retroYear =
+    games.length > 0 &&
+    Object.prototype.hasOwnProperty.call(retroYearEnds, team) &&
+    games[currentGame].year <= Number(retroYearEnds[team]);
+
   return (
     <AnimatePresence mode="popLayout">
       {games?.length > 0 && (
@@ -32,7 +44,7 @@ const PlayerGrid: React.FC<PlayerGridProps> = ({ games, currentGame }) => {
           <PlayerCard
             headshot={games[currentGame].leader.headshot_url}
             name={games[currentGame].leader.name}
-            color={games[currentGame].team.abbreviation}
+            color={retroYear ? `${team}retro` : team}
           />
         </motion.div>
       )}
@@ -52,14 +64,14 @@ const PlayerGrid: React.FC<PlayerGridProps> = ({ games, currentGame }) => {
               exit: {
                 opacity: 0,
                 y: -50,
-                transition: { duration: 0.05 },
+                transition: { duration: 0.1 },
               },
             }}
           >
             <PlayerCard
               headshot={player.headshot_url}
               name={player.name}
-              color={games[currentGame].team.abbreviation}
+              color={retroYear ? `${team}retro` : team}
             />
           </motion.div>
         ))}

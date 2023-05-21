@@ -14,17 +14,27 @@ type PlayBarProps = {
   pause: boolean;
   setPause: (pause: boolean) => void;
   currentYear: number;
+  currentTeam: string;
+  currentGame: number;
+  setCurrentGame: (currentGame: number) => void;
 };
 
-const PlayBar: React.FC<PlayBarProps> = ({ pause, setPause, currentYear }) => {
+const PlayBar: React.FC<PlayBarProps> = ({
+  pause,
+  setPause,
+  currentYear,
+  currentTeam,
+  currentGame,
+  setCurrentGame,
+}) => {
   const navigate = useNavigate();
   const previousYear = () => {
-    navigate(`/?team=PHO&year=${currentYear - 1}`);
+    navigate(`/?team=${currentTeam}&year=${currentYear - 1}`);
     window.location.reload();
   };
 
   const nextYear = () => {
-    navigate(`/?team=PHO&year=${currentYear + 1}`);
+    navigate(`/?team=${currentTeam}&year=${currentYear + 1}`);
     window.location.reload();
   };
 
@@ -41,27 +51,29 @@ const PlayBar: React.FC<PlayBarProps> = ({ pause, setPause, currentYear }) => {
       <Flex bg="gray.800" paddingX={2} paddingY={2} gap={2}>
         <IconButton
           aria-label="Go Back a Year"
-          icon={<IoPlaySkipBackSharp size="lg" />}
+          icon={<IoPlaySkipBackSharp size="24px" />}
           onClick={previousYear}
         />
         <IconButton
           aria-label="Go Back a Game"
-          icon={<IoPlayBackSharp size="lg" />}
-          onClick={previousYear}
+          icon={<IoPlayBackSharp size="24px" />}
+          onClick={() => setCurrentGame(currentGame - 1)}
         />
         <IconButton
           aria-label="Pause Season Recap"
-          icon={pause ? <IoPlaySharp size="lg" /> : <IoPlayOutline size="lg" />}
+          icon={
+            pause ? <IoPlaySharp size="24px" /> : <IoPlayOutline size="24px" />
+          }
           onClick={() => setPause(!pause)}
         />
         <IconButton
           aria-label="Go Forward a Game"
-          icon={<IoPlayForwardSharp size="lg" />}
-          onClick={nextYear}
+          icon={<IoPlayForwardSharp size="24px" />}
+          onClick={() => setCurrentGame(currentGame + 1)}
         />
         <IconButton
           aria-label="Go Forward a Year"
-          icon={<IoPlaySkipForwardSharp size="lg" />}
+          icon={<IoPlaySkipForwardSharp size="24px" />}
           onClick={nextYear}
         />
       </Flex>

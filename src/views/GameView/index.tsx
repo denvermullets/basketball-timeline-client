@@ -20,6 +20,8 @@ export interface Game {
   leader: Leader;
   players: Player[];
   team: Team;
+  year: number;
+  playoffs: boolean;
 }
 
 type Team = {
@@ -76,7 +78,7 @@ const GameView: React.FC = () => {
       } else {
         return;
       }
-    }, 750);
+    }, 1000);
 
     return () => {
       clearInterval(interval);
@@ -85,7 +87,7 @@ const GameView: React.FC = () => {
 
   return (
     <>
-      <Container maxW="700px">
+      <Container maxW="700px" marginTop={20}>
         <Flex
           direction={{ base: "column", md: "row" }}
           flexWrap="wrap"
@@ -93,16 +95,25 @@ const GameView: React.FC = () => {
           justifyContent="center"
           gap="4"
         >
-          <PlayerGrid games={games} currentGame={currentGame} />
+          {homeTeam && year && (
+            <PlayerGrid
+              games={games}
+              currentGame={currentGame}
+              team={homeTeam}
+            />
+          )}
         </Flex>
       </Container>
       <Box>
-        {games?.length > 0 && (
+        {games?.length > 0 && year && homeTeam && (
           <>
             <PlayBar
               pause={pause}
               setPause={setPause}
               currentYear={Number(year)}
+              currentTeam={homeTeam}
+              currentGame={currentGame}
+              setCurrentGame={setCurrentGame}
             />
 
             <Scoreboard
