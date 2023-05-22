@@ -42,13 +42,18 @@ const PlayBar: React.FC<PlayBarProps> = ({
     <Box
       marginX="auto"
       marginY={2}
-      width="30%"
+      // width="30%"
       rounded="md"
       overflow="hidden"
       boxShadow="md"
       fontSize="md"
     >
-      <Flex bg="gray.800" paddingX={2} paddingY={2} gap={2}>
+      <Flex
+        bgGradient={`linear(40deg, ${currentTeam}.100, ${currentTeam}.50)`}
+        paddingX={2}
+        paddingY={2}
+        gap={2}
+      >
         <IconButton
           aria-label="Go Back a Year"
           icon={<IoPlaySkipBackSharp size="24px" />}
@@ -61,9 +66,7 @@ const PlayBar: React.FC<PlayBarProps> = ({
         />
         <IconButton
           aria-label="Pause Season Recap"
-          icon={
-            pause ? <IoPlaySharp size="24px" /> : <IoPlayOutline size="24px" />
-          }
+          icon={pause ? <IoPlaySharp size="24px" /> : <IoPlayOutline size="24px" />}
           onClick={() => setPause(!pause)}
         />
         <IconButton

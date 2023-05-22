@@ -32,6 +32,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
       overflow="hidden"
       boxShadow="md"
       fontSize="xs"
+      backgroundColor="white"
     >
       <Flex bg="gray.200" px={2} py={2}>
         <Box w="1/6" color="gray.700" textAlign="right">
@@ -59,11 +60,8 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
         </Box>
 
         <Box flex="1" textAlign="right">
-          <Text fontSize={{ base: "lg", sm: "xl" }} fontWeight="bold">
+          <Badge colorScheme={gameWon ? "green" : "red"} fontSize={{ base: "lg", sm: "xl" }}>
             {homeScore}
-          </Text>
-          <Badge colorScheme={gameWon ? "green" : "red"}>
-            {gameWon ? "w" : "l"}
           </Badge>
         </Box>
       </Flex>
