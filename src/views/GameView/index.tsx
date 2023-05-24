@@ -54,6 +54,7 @@ const GameView: React.FC = () => {
   const [currentGame, setCurrentGame] = useState<number>(0);
   const [pause, setPause] = useState<boolean>(false);
   const isMobile = useBreakpointValue({ base: true, md: false });
+  const apiUrl = import.meta.env.VITE_API_URL || "";
 
   const isRetro =
     games.length > 0 &&
@@ -98,9 +99,7 @@ const GameView: React.FC = () => {
   useEffect(() => {
     const loadTeamRoster = async () => {
       try {
-        const info = await axios.get(
-          `http://localhost:3000/api/v1/starting_stats?team=${homeTeam}&year=${year}`
-        );
+        const info = await axios.get(`${apiUrl}/starting_stats?team=${homeTeam}&year=${year}`);
         if (info.data) {
           console.log(info.data);
           setGames(info.data);
@@ -112,7 +111,7 @@ const GameView: React.FC = () => {
 
     const loadTeams = async () => {
       try {
-        const info = await axios.get("http://localhost:3000/api/v1/teams");
+        const info = await axios.get(`${apiUrl}/teams`);
         if (info.data) {
           console.log(info.data);
           setTeams(info.data);
@@ -126,7 +125,7 @@ const GameView: React.FC = () => {
       loadTeamRoster();
       loadTeams();
     }
-  }, [homeTeam, year]);
+  }, [homeTeam, year, apiUrl]);
 
   useEffect(() => {
     const interval = setInterval(() => {
