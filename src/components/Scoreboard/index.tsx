@@ -11,6 +11,7 @@ type ScoreboardProps = {
   win: number;
   loss: number;
   gameWon: boolean;
+  style?: React.CSSProperties;
 };
 
 const Scoreboard: React.FC<ScoreboardProps> = ({
@@ -22,6 +23,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
   win,
   loss,
   gameWon,
+  style,
 }) => {
   return (
     <Box
@@ -33,6 +35,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
       boxShadow="md"
       fontSize="xs"
       backgroundColor="white"
+      style={style}
     >
       <Flex bg="gray.200" px={2} py={2}>
         <Box w="1/6" color="gray.700" textAlign="right">
@@ -53,9 +56,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
             <Text fontSize="sm" fontWeight="bold">
               {teamName}
             </Text>
-            <Text display={{ base: "none", sm: "block" }} color="gray.600">
-              {`${win} - ${loss}`}
-            </Text>
+            <Text color="gray.600">{`${win} - ${loss}`}</Text>
           </Box>
         </Box>
 

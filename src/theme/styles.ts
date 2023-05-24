@@ -198,6 +198,7 @@ export const globalStyles = {
     global: (props: any) => ({
       body: {
         overflowX: "hidden",
+        // bg: "gray.200",
         // bg: mode("darkMode.50", "darkMode.500")(props),
         letterSpacing: "-0.5px",
       },

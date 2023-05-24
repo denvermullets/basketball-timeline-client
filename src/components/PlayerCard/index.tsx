@@ -1,4 +1,4 @@
-import { Avatar, Box, Flex, Heading, useToken } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Heading, useBreakpointValue } from "@chakra-ui/react";
 
 type PlayerCardProps = {
   headshot: string;
@@ -12,12 +12,32 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ headshot, name, color }) => {
   const firstName = firstSpaceIndex !== -1 ? name.slice(0, firstSpaceIndex) : name;
   const lastName = firstSpaceIndex !== -1 ? name.slice(firstSpaceIndex + 1) : "";
   const longLastName = lastName.length > 12;
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  const headingSize = () => {
+    if (longLastName && isMobile) {
+      return "xs";
+    } else if (longLastName) {
+      return "sm";
+    } else {
+      return "md";
+    }
+  };
+
+  const headshotSize = () => {
+    if (isMobile && !headshot) {
+      return 0;
+    } else if (!headshot) {
+      return 45;
+    } else {
+      return 0;
+    }
+  };
 
   return (
     <Flex
       direction="column"
       alignItems="center"
-      padding="8"
+      padding={isMobile ? 0 : 8}
       position="relative"
       rounded="md"
       shadow={{ md: "base" }}
@@ -28,24 +48,30 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ headshot, name, color }) => {
       <Box
         position="absolute"
         bottom="0"
-        width="full"
+        width="100%"
         height="2"
         bgGradient={`linear(40deg, ${color}.50, ${color}.100)`}
         roundedBottom="inherit"
       />
 
-      <Avatar size="3xl" src={headshot} borderRadius="5px" marginBottom={headshot ? 0 : "45px"} />
-      <Box textAlign="left">
+      <Avatar
+        size={isMobile ? "xl" : "3xl"}
+        src={headshot}
+        borderRadius="5px"
+        marginBottom={headshotSize()}
+      />
+      <Box textAlign="center">
         <Heading
-          size={longLastName ? "sm" : "md"}
           as="h2"
-          marginTop="4px"
-          textAlign="center"
-          lineHeight="6"
+          size={headingSize()}
+          lineHeight={isMobile ? 3 : 6}
+          fontSize={isMobile ? "12px" : "18px"}
+          marginTop={isMobile ? "6px" : "8px"}
+          marginBottom={isMobile ? "16px" : 0}
         >
           {firstName}
           <br />
-          {lastName}
+          <Box> {isMobile ? lastName.replace("-", "- ") : lastName}</Box>
         </Heading>
       </Box>
     </Flex>

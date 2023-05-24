@@ -3,6 +3,7 @@ import React from "react";
 import { Game, Player } from "../../views/GameView";
 import PlayerCard from "../PlayerCard";
 import { retroYear, retroYearEnds } from "./helpers";
+import { useBreakpointValue } from "@chakra-ui/react";
 
 type PlayerGridProps = {
   games: Game[];
@@ -10,11 +11,11 @@ type PlayerGridProps = {
   team: string;
 };
 
-const PlayerGrid: React.FC<PlayerGridProps> = ({
-  games,
-  currentGame,
-  team,
-}) => {
+const PlayerGrid: React.FC<PlayerGridProps> = ({ games, currentGame, team }) => {
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  const height = isMobile ? 140 : 300;
+  const width = isMobile ? 100 : 200;
+
   const isRetro =
     games.length > 0 &&
     Object.prototype.hasOwnProperty.call(retroYearEnds, team) &&
@@ -31,7 +32,7 @@ const PlayerGrid: React.FC<PlayerGridProps> = ({
           transition={{
             duration: 0.5,
           }}
-          style={{ width: 200, height: 300 }}
+          style={{ width: width, height: height }}
           variants={{
             exit: {
               opacity: 0,
@@ -58,7 +59,7 @@ const PlayerGrid: React.FC<PlayerGridProps> = ({
               duration: 0.5,
               delay: currentGame === 0 ? (index + 1) * 0.2 : 0,
             }}
-            style={{ width: 200, height: 300 }}
+            style={{ width: width, height: height }}
             variants={{
               exit: {
                 opacity: 0,

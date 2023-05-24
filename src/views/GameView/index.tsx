@@ -1,20 +1,11 @@
-import {
-  Box,
-  Container,
-  Flex,
-  Grid,
-  Heading,
-  VStack,
-  useBreakpointValue,
-  useToken,
-} from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, useBreakpointValue, useToken } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Scoreboard from "../../components/Scoreboard";
 import { useLocation } from "react-router-dom";
 import PlayerGrid from "../../components/PlayerGrid";
-import PlayBar from "../../components/PlayBar";
 import { retroYear, retroYearEnds } from "../../components/PlayerGrid/helpers";
+import TeamNavigation from "../../components/TeamNavigation";
 
 export interface Game {
   id: number;
@@ -34,9 +25,11 @@ export interface Game {
   playoffs: boolean;
 }
 
-type Team = {
+export type Team = {
   name: string;
   abbreviation: string;
+  year_start: number;
+  year_end: number;
 };
 
 export interface Leader {
@@ -57,6 +50,7 @@ const GameView: React.FC = () => {
   const homeTeam = queryParams.get("team");
   const year = queryParams.get("year");
   const [games, setGames] = useState<Game[]>([]);
+  const [teams, setTeams] = useState<Team[]>([]);
   const [currentGame, setCurrentGame] = useState<number>(0);
   const [pause, setPause] = useState<boolean>(false);
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -102,7 +96,7 @@ const GameView: React.FC = () => {
   };
 
   useEffect(() => {
-    const loadInfo = async () => {
+    const loadTeamRoster = async () => {
       try {
         const info = await axios.get(
           `http://localhost:3000/api/v1/starting_stats?team=${homeTeam}&year=${year}`
@@ -116,10 +110,23 @@ const GameView: React.FC = () => {
       }
     };
 
-    if (!games.length && homeTeam && year) {
-      loadInfo();
+    const loadTeams = async () => {
+      try {
+        const info = await axios.get("http://localhost:3000/api/v1/teams");
+        if (info.data) {
+          console.log(info.data);
+          setTeams(info.data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (homeTeam && year) {
+      loadTeamRoster();
+      loadTeams();
     }
-  }, [games, homeTeam, year]);
+  }, [homeTeam, year]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -140,10 +147,10 @@ const GameView: React.FC = () => {
     <>
       {games?.length > 0 && year && homeTeam && (
         <Container
-          maxWidth="80%"
+          maxWidth={isMobile ? "100%" : "800px"}
           padding={0}
           shadow="lg"
-          marginTop={5}
+          marginTop={isMobile ? 0 : 5}
           borderColor={`${color}.50`}
           borderWidth={1}
           rounded="md"
@@ -165,55 +172,84 @@ const GameView: React.FC = () => {
           >
             {games[0].team.name}
           </Heading>
-          <Container maxW="700px" marginTop={5} position="relative">
+          <Container
+            maxW={isMobile ? "100%" : "700px"}
+            marginTop={isMobile ? 2 : 5}
+            position="relative"
+            padding={0}
+          >
             <Flex
-              direction={{ base: "column", md: "row" }}
+              direction="row"
               flexWrap="wrap"
               alignItems="center"
               justifyContent="center"
-              gap="4"
+              gap={isMobile ? 2 : 4}
+              padding={0}
             >
               {homeTeam && year && (
                 <PlayerGrid games={games} currentGame={currentGame} team={homeTeam} />
               )}
             </Flex>
           </Container>
-          <Box padding={2} zIndex="10" position="relative">
-            <Grid
-              templateColumns={{ base: "1fr", md: "1fr 1fr" }}
-              alignItems="center"
-              justifyContent="center"
-              gap={4}
+          <Box
+            zIndex="10"
+            position="relative"
+            marginTop={isMobile ? 2 : 4}
+            marginBottom={isMobile ? 0 : 6}
+          >
+            <Flex
+              direction={{ base: "column", md: "row" }}
+              justifyContent="space-between"
+              alignItems={{ base: "flex-start", md: "center" }}
             >
-              <VStack alignItems="center" justifyContent="center">
-                <PlayBar
-                  pause={pause}
-                  setPause={setPause}
-                  currentYear={Number(year)}
-                  currentTeam={homeTeam}
-                  currentGame={currentGame}
-                  setCurrentGame={setCurrentGame}
-                />
-                <PlayBar
-                  pause={pause}
-                  setPause={setPause}
-                  currentYear={Number(year)}
-                  currentTeam={homeTeam}
-                  currentGame={currentGame}
-                  setCurrentGame={setCurrentGame}
-                />
-              </VStack>
-              <Scoreboard
-                date={String(games[currentGame].date)}
-                homeScore={games[currentGame].team_points}
-                awayScore={games[currentGame].opponent_points}
-                teamName={games[currentGame].team.name}
-                opponentName={games[currentGame].opponent}
-                win={games[currentGame].win}
-                loss={games[currentGame].loss}
-                gameWon={games[currentGame].game_won}
-              />
-            </Grid>
+              {isMobile ? (
+                <>
+                  <Scoreboard
+                    date={String(games[currentGame].date)}
+                    homeScore={games[currentGame].team_points}
+                    awayScore={games[currentGame].opponent_points}
+                    teamName={games[currentGame].team.name}
+                    opponentName={games[currentGame].opponent}
+                    win={games[currentGame].win}
+                    loss={games[currentGame].loss}
+                    gameWon={games[currentGame].game_won}
+                    style={{ marginBottom: isMobile ? "6px" : "20px" }}
+                  />
+                  <TeamNavigation
+                    pause={pause}
+                    setPause={setPause}
+                    currentYear={Number(year)}
+                    currentTeam={homeTeam}
+                    currentGame={currentGame}
+                    setCurrentGame={setCurrentGame}
+                    teams={teams}
+                  />
+                </>
+              ) : (
+                <>
+                  <TeamNavigation
+                    pause={pause}
+                    setPause={setPause}
+                    currentYear={Number(year)}
+                    currentTeam={homeTeam}
+                    currentGame={currentGame}
+                    setCurrentGame={setCurrentGame}
+                    teams={teams}
+                  />
+                  <Scoreboard
+                    date={String(games[currentGame].date)}
+                    homeScore={games[currentGame].team_points}
+                    awayScore={games[currentGame].opponent_points}
+                    teamName={games[currentGame].team.name}
+                    opponentName={games[currentGame].opponent}
+                    win={games[currentGame].win}
+                    loss={games[currentGame].loss}
+                    gameWon={games[currentGame].game_won}
+                    style={{ marginLeft: "20px" }}
+                  />
+                </>
+              )}
+            </Flex>
           </Box>
         </Container>
       )}
