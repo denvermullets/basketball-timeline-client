@@ -1,4 +1,3 @@
-import { mode } from "@chakra-ui/theme-tools";
 export const globalStyles = {
   colors: {
     ATL: {
@@ -195,7 +194,7 @@ export const globalStyles = {
     },
   },
   styles: {
-    global: (props: any) => ({
+    global: () => ({
       body: {
         overflowX: "hidden",
         // bg: "gray.200",
