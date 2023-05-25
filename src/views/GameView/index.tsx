@@ -222,6 +222,7 @@ const GameView: React.FC = () => {
                     currentGame={currentGame}
                     setCurrentGame={setCurrentGame}
                     teams={teams}
+                    lastGame={games.length - 1}
                   />
                 </>
               ) : (
@@ -234,6 +235,7 @@ const GameView: React.FC = () => {
                     currentGame={currentGame}
                     setCurrentGame={setCurrentGame}
                     teams={teams}
+                    lastGame={games.length - 1}
                   />
                   <Scoreboard
                     date={String(games[currentGame].date)}

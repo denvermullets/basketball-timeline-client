@@ -12,6 +12,7 @@ type TeamNavigationdProps = {
   currentGame: number;
   setCurrentGame: (currentGame: number) => void;
   teams: Team[];
+  lastGame: number;
 };
 
 const TeamNavigation: React.FC<TeamNavigationdProps> = ({
@@ -22,6 +23,7 @@ const TeamNavigation: React.FC<TeamNavigationdProps> = ({
   currentGame,
   setCurrentGame,
   teams,
+  lastGame,
 }) => {
   const navigate = useNavigate();
   const [selectedTeam, setSelectedTeam] = useState<string>(currentTeam);
@@ -87,6 +89,8 @@ const TeamNavigation: React.FC<TeamNavigationdProps> = ({
           currentTeam={currentTeam}
           currentGame={currentGame}
           setCurrentGame={setCurrentGame}
+          years={teamYears}
+          lastGame={lastGame}
         />
       </Flex>
       <Box px={2} py={2} alignItems="center">
