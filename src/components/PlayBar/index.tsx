@@ -18,6 +18,8 @@ type PlayBarProps = {
   currentTeam: string;
   currentGame: number;
   setCurrentGame: (currentGame: number) => void;
+  years: number[];
+  lastGame: number;
 };
 
 const PlayBar: React.FC<PlayBarProps> = ({
@@ -27,6 +29,8 @@ const PlayBar: React.FC<PlayBarProps> = ({
   currentTeam,
   currentGame,
   setCurrentGame,
+  years,
+  lastGame,
 }) => {
   const navigate = useNavigate();
   const isRetro =
@@ -62,12 +66,14 @@ const PlayBar: React.FC<PlayBarProps> = ({
         aria-label="Go Back a Year"
         icon={<IoPlaySkipBackSharp size={iconSize} />}
         onClick={previousYear}
+        isDisabled={currentYear === years[0]}
       />
       <IconButton
         size={buttonSize}
         aria-label="Go Back a Game"
         icon={<IoPlayBackSharp size={iconSize} />}
         onClick={() => setCurrentGame(currentGame - 1)}
+        isDisabled={currentGame === 0}
       />
       <IconButton
         size={buttonSize}
@@ -80,12 +86,14 @@ const PlayBar: React.FC<PlayBarProps> = ({
         aria-label="Go Forward a Game"
         icon={<IoPlayForwardSharp size={iconSize} />}
         onClick={() => setCurrentGame(currentGame + 1)}
+        isDisabled={currentGame === lastGame}
       />
       <IconButton
         size={buttonSize}
         aria-label="Go Forward a Year"
         icon={<IoPlaySkipForwardSharp size={iconSize} />}
         onClick={nextYear}
+        isDisabled={currentYear === years[years.length - 1]}
       />
     </Flex>
   );
