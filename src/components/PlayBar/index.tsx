@@ -1,4 +1,4 @@
-import { Flex, IconButton } from "@chakra-ui/react";
+import { Box, Flex, IconButton } from "@chakra-ui/react";
 import React from "react";
 import {
   IoPlaySkipForwardSharp,
@@ -55,7 +55,7 @@ const PlayBar: React.FC<PlayBarProps> = ({
       paddingX={2}
       paddingY={2}
       gap={2}
-      width="100%"
+      width="auto"
     >
       <IconButton
         size={buttonSize}

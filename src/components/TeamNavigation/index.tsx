@@ -72,7 +72,7 @@ const TeamNavigation: React.FC<TeamNavigationdProps> = ({
     <Box
       mx="auto"
       my={2}
-      width="auto"
+      width="225px"
       rounded="md"
       overflow="hidden"
       boxShadow="md"
@@ -89,7 +89,7 @@ const TeamNavigation: React.FC<TeamNavigationdProps> = ({
           setCurrentGame={setCurrentGame}
         />
       </Flex>
-      <Box px={2} py={2} alignItems="center" width="100%">
+      <Box px={2} py={2} alignItems="center">
         {teams.length > 0 && (
           <Select
             placeholder="Select Team"
