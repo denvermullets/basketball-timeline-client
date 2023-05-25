@@ -1,4 +1,4 @@
-import { Box, Flex, IconButton } from "@chakra-ui/react";
+import { Flex, IconButton } from "@chakra-ui/react";
 import React from "react";
 import {
   IoPlaySkipForwardSharp,
