@@ -97,6 +97,7 @@ const GameView: React.FC = () => {
   };
 
   useEffect(() => {
+    console.log("api", apiUrl);
     const loadTeamRoster = async () => {
       try {
         const info = await axios.get(`${apiUrl}/starting_stats?team=${homeTeam}&year=${year}`);
