@@ -97,12 +97,10 @@ const GameView: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log("api", apiUrl);
     const loadTeamRoster = async () => {
       try {
         const info = await axios.get(`${apiUrl}/starting_stats?team=${homeTeam}&year=${year}`);
         if (info.data) {
-          console.log(info.data);
           setGames(info.data);
         }
       } catch (error) {
@@ -114,7 +112,6 @@ const GameView: React.FC = () => {
       try {
         const info = await axios.get(`${apiUrl}/teams`);
         if (info.data) {
-          console.log(info.data);
           setTeams(info.data);
         }
       } catch (error) {
@@ -131,7 +128,6 @@ const GameView: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (currentGame !== games.length - 1 && !pause) {
-        console.log(currentGame, games.length);
         setCurrentGame((prevGame) => prevGame + 1);
       } else {
         return;
